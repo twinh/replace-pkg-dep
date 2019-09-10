@@ -1,0 +1,15 @@
+{
+  "name": "__tests__",
+  "version": "1.0.0",
+  "dependencies": {
+    "test": "^0.1.0",
+    "test2": "^0.1.0"
+  },
+  "devDependencies": {
+    "test3": "^0.1.0"
+  },
+  "ciDependencies": {
+    "test": "user/test#master",
+    "test3": "user/test3#branch"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "replace-pkg-dep",
+  "version": "0.1.0",
+  "description": "Replace package.json dependencies/devDependencies by ciDependencies, useful to be used in CI",
+  "keywords": [
+    "package",
+    "dependency",
+    "dependencies",
+    "devDependencies",
+    "replace",
+    "edit",
+    "update"
+  ],
+  "author": "twinh <twinhuang@qq.com>",
+  "homepage": "https://github.com/twinh/replace-pkg-dep#readme",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "replace-pkg-dep": "dist/cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twinh/replace-pkg-dep.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf dist coverage",
+    "test": "jest",
+    "prepare": "yarn build"
+  },
+  "dependencies": {
+    "@types/node": "^12.7.4"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.18",
+    "coveralls": "^3.0.6",
+    "jest": "^24.9.0",
+    "rimraf": "^3.0.0",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.5.3"
+  }
+}
