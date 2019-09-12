@@ -11,26 +11,10 @@ export default async function (dir: string = null) {
   }
   const replaceDependencies = config[replaceKey];
 
-  if (typeof config.dependencies === 'undefined') {
-    config.dependencies = {};
+  if (typeof config.resolutions === 'undefined') {
+    config.resolutions = {};
   }
-
-  if (typeof config.devDependencies === 'undefined') {
-    config.devDependencies = {};
-  }
-
-  for (const dependency in replaceDependencies) {
-    if (!replaceDependencies.hasOwnProperty(dependency)) {
-      continue;
-    }
-
-    if (config.dependencies && typeof config.dependencies[dependency] !== 'undefined') {
-      config.dependencies[dependency] = replaceDependencies[dependency];
-      continue;
-    }
-
-    config.devDependencies[dependency] = replaceDependencies[dependency];
-  }
+  Object.assign(config.resolutions, replaceDependencies);
 
   const content = JSON.stringify(config, null, 2);
   return await util.promisify(fs.writeFile)(fileName, content);

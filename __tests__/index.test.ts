@@ -25,12 +25,8 @@ afterAll(async () => {
 describe('replace-pkg-dep', () => {
   test('replace dependencies', async () => {
     await writePackage({
-      "dependencies": {
-        "test": "^0.1.0",
+      "resolutions": {
         "test2": "^0.1.0"
-      },
-      "devDependencies": {
-        "test3": "^0.1.0"
       },
       "ciDependencies": {
         "test": "user/test#master",
@@ -41,12 +37,9 @@ describe('replace-pkg-dep', () => {
 
     const config = await getConfig();
 
-    expect(config.dependencies).toEqual({
+    expect(config.resolutions).toEqual({
+      "test2": "^0.1.0",
       "test": "user/test#master",
-      "test2": "^0.1.0"
-    });
-
-    expect(config.devDependencies).toEqual({
       "test3": "user/test3#branch"
     });
   });
@@ -60,29 +53,7 @@ describe('replace-pkg-dep', () => {
     expect(config).toEqual({});
   });
 
-  test('dependencies key not in package.json', async () => {
-    await writePackage({
-      "devDependencies": {
-        "test3": "^0.1.0"
-      },
-      "ciDependencies": {
-        "test": "user/test#master",
-        "test3": "user/test3#branch"
-      }
-    });
-    await replacePkgDep(__dirname);
-
-    const config = await getConfig();
-
-    expect(config.dependencies).toEqual({});
-
-    expect(config.devDependencies).toEqual({
-      "test": "user/test#master",
-      "test3": "user/test3#branch"
-    });
-  });
-
-  test('devDependencies key not in package.json', async () => {
+  test('resolutions key not in package.json', async () => {
     await writePackage({
       "ciDependencies": {
         "test": "user/test#master",
@@ -93,9 +64,7 @@ describe('replace-pkg-dep', () => {
 
     const config = await getConfig();
 
-    expect(config.dependencies).toEqual({});
-
-    expect(config.devDependencies).toEqual({
+    expect(config.resolutions).toEqual({
       "test": "user/test#master",
       "test3": "user/test3#branch"
     });
