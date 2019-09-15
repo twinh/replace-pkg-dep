@@ -1,6 +1,6 @@
 {
   "name": "replace-pkg-dep",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Replace package.json dependencies/devDependencies by ciDependencies, useful to be used in CI",
   "keywords": [
     "package",
