@@ -32,7 +32,9 @@
     "prepare": "yarn build"
   },
   "dependencies": {
-    "@types/node": "^12.7.4"
+    "@types/node": "^12.7.4",
+    "git-cli-wrapper": "^0.1.5",
+    "github-branches": "^3.1.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
