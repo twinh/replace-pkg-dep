@@ -5,6 +5,7 @@
     "outDir": "dist",
     "declaration": true,
     "noImplicitAny": true,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "lib": [
       "dom",

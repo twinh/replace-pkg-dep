@@ -2,8 +2,8 @@ import * as fs from 'fs';
 import * as util from 'util';
 import * as path from 'path';
 import git from 'git-cli-wrapper';
-import * as githubBranches from 'github-branches';
 import log from '@gitsync/log';
+import githubBranches from 'github-branches';
 
 export default async function (dir: string = process.cwd()) {
   const fileName = path.join(dir, 'package.json');
