@@ -29,7 +29,7 @@ describe('replace-pkg-dep', () => {
         "test2": "^0.1.0"
       },
       "ciDependencies": {
-        "test": "user/test#master",
+        "test": "user/test",
         "test3": "user/test3#branch"
       }
     });
@@ -39,7 +39,7 @@ describe('replace-pkg-dep', () => {
 
     expect(config.resolutions).toEqual({
       "test2": "^0.1.0",
-      "test": "user/test#master",
+      "test": "user/test",
       "test3": "user/test3#branch"
     });
   });
@@ -56,7 +56,7 @@ describe('replace-pkg-dep', () => {
   test('resolutions key not in package.json', async () => {
     await writePackage({
       "ciDependencies": {
-        "test": "user/test#master",
+        "test": "user/test",
         "test3": "user/test3#branch"
       }
     });
@@ -65,7 +65,7 @@ describe('replace-pkg-dep', () => {
     const config = await getConfig();
 
     expect(config.resolutions).toEqual({
-      "test": "user/test#master",
+      "test": "user/test",
       "test3": "user/test3#branch"
     });
   });
