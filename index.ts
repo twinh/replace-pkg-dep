@@ -3,6 +3,7 @@ import * as util from 'util';
 import * as path from 'path';
 import git from 'git-cli-wrapper';
 import * as githubBranches from 'github-branches';
+import log from '@gitsync/log';
 
 export default async function (dir: string = process.cwd()) {
   const fileName = path.join(dir, 'package.json');
@@ -18,8 +19,11 @@ export default async function (dir: string = process.cwd()) {
     config.resolutions = {};
   }
 
-  const repo = git(dir);
-  const branch = await repo.getBranch();
+  const branch = process.env.TRAVIS_PULL_REQUEST_BRANCH
+    || process.env.TRAVIS_BRANCH
+    || await git(dir).getBranch();
+  log.info(`current branch is "${branch}"`);
+
   if (branch !== 'master') {
     for (const name in replaceDependencies) {
       if (!replaceDependencies.hasOwnProperty(name)) {
@@ -30,6 +34,7 @@ export default async function (dir: string = process.cwd()) {
       for (const branchInfo of branches) {
         if (branchInfo.name === branch) {
           replaceDependencies[name] += '#' + branch;
+          log.info(`update dependency "${name}"`);
           break;
         }
       }
@@ -37,6 +42,7 @@ export default async function (dir: string = process.cwd()) {
   }
 
   Object.assign(config.resolutions, replaceDependencies);
+  log.info(`replaced dependencies to:`, config.resolutions);
 
   const content = JSON.stringify(config, null, 2);
   return await util.promisify(fs.writeFile)(fileName, content);

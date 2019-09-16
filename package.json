@@ -32,6 +32,7 @@
     "prepare": "yarn build"
   },
   "dependencies": {
+    "@gitsync/log": "^0.1.4",
     "@types/node": "^12.7.4",
     "git-cli-wrapper": "^0.1.5",
     "github-branches": "^3.1.0"
