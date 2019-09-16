@@ -42,8 +42,30 @@ export default async function (dir: string = process.cwd()) {
   }
 
   Object.assign(config.resolutions, replaceDependencies);
-  log.info(`replaced dependencies to:`, config.resolutions);
 
+  // Packages may not have been published, replace to avoid yarn install returns not found error
+  if (typeof config.dependencies === 'undefined') {
+    config.dependencies = {};
+  }
+
+  if (typeof config.devDependencies === 'undefined') {
+    config.devDependencies = {};
+  }
+
+  for (const dependency in replaceDependencies) {
+    if (!replaceDependencies.hasOwnProperty(dependency)) {
+      continue;
+    }
+
+    if (config.dependencies && typeof config.dependencies[dependency] !== 'undefined') {
+      config.dependencies[dependency] = replaceDependencies[dependency];
+      continue;
+    }
+
+    config.devDependencies[dependency] = replaceDependencies[dependency];
+  }
+
+  log.info('replaced to:', config);
   const content = JSON.stringify(config, null, 2);
   return await util.promisify(fs.writeFile)(fileName, content);
 }
