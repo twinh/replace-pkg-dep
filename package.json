@@ -1,6 +1,6 @@
 {
   "name": "replace-pkg-dep",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Replace package.json dependencies/devDependencies by ciDependencies, useful to be used in CI",
   "keywords": [
     "package",
@@ -32,9 +32,9 @@
     "prepare": "yarn build"
   },
   "dependencies": {
-    "@gitsync/log": "^0.1.4",
+    "@gitsync/log": "^0.2.0",
     "@types/node": "^12.7.4",
-    "git-cli-wrapper": "^0.1.5",
+    "git-cli-wrapper": "^0.2.0",
     "github-branches": "^3.1.0"
   },
   "devDependencies": {
