@@ -21,6 +21,7 @@ export default async function (dir: string = process.cwd()) {
 
   const branch = process.env.TRAVIS_PULL_REQUEST_BRANCH
     || process.env.TRAVIS_BRANCH
+    || process.env.GITHUB_REF
     || await git(dir).getBranch();
   log.info(`current branch is "${branch}"`);
 
