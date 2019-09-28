@@ -18,11 +18,11 @@ async function getConfig() {
   return JSON.parse(await util.promisify(fs.readFile)(packageFile, 'UTF-8'));
 }
 
-afterAll(async () => {
-  return await unlinkPackage();
-});
-
 describe('replace-pkg-dep', () => {
+  afterAll(async () => {
+    return await unlinkPackage();
+  });
+
   test('replace dependencies', async () => {
     await writePackage({
       "resolutions": {
