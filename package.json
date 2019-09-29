@@ -33,9 +33,9 @@
   },
   "dependencies": {
     "@gitsync/log": "^0.2.0",
+    "@octokit/rest": "^16.30.1",
     "@types/node": "^12.7.4",
-    "git-cli-wrapper": "^0.2.0",
-    "github-branches": "^3.1.0"
+    "git-cli-wrapper": "^0.2.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
@@ -43,6 +43,7 @@
     "jest": "^24.9.0",
     "rimraf": "^3.0.0",
     "ts-jest": "^24.0.2",
-    "typescript": "^3.5.3"
+    "typescript": "^3.5.3",
+    "@gitsync/test": "^0.2.0"
   }
 }

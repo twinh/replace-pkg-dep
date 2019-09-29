@@ -3,7 +3,11 @@ import * as util from 'util';
 import * as path from 'path';
 import git from 'git-cli-wrapper';
 import log from '@gitsync/log';
-import githubBranches from 'github-branches';
+import * as Octokit from '@octokit/rest';
+
+const octokit = new Octokit({
+  auth: process.env.GITHUB_TOKEN
+});
 
 export default async function (dir: string = process.cwd()) {
   const fileName = path.join(dir, 'package.json');
@@ -31,13 +35,19 @@ export default async function (dir: string = process.cwd()) {
         continue;
       }
 
-      const branches = await githubBranches(replaceDependencies[name]);
-      for (const branchInfo of branches) {
-        if (branchInfo.name === branch) {
+      const [owner, repo] = replaceDependencies[name].split('/');
+      try {
+        const {status} = await octokit.repos.getBranch({
+          branch: branch,
+          owner: owner,
+          repo: repo,
+        });
+        if (status === 200) {
           replaceDependencies[name] += '#' + branch;
           log.info(`update dependency "${name}"`);
-          break;
         }
+      } catch (e) {
+        log.info(e);
       }
     }
   }
