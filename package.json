@@ -45,5 +45,8 @@
     "ts-jest": "^24.0.2",
     "typescript": "^3.5.3",
     "@gitsync/test": "^0.2.0"
+  },
+  "ciDependencies": {
+    "@gitsync/test": "gitsync-pkg/gitsync-test"
   }
 }
