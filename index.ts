@@ -25,7 +25,7 @@ export default async function (dir: string = process.cwd()) {
 
   const branch = process.env.TRAVIS_PULL_REQUEST_BRANCH
     || process.env.TRAVIS_BRANCH
-    || process.env.GITHUB_REF
+    || getGithubBranch()
     || await git(dir).getBranch();
   log.info(`current branch is "${branch}"`);
 
@@ -79,4 +79,12 @@ export default async function (dir: string = process.cwd()) {
   log.info('replaced to:', config);
   const content = JSON.stringify(config, null, 2);
   return await util.promisify(fs.writeFile)(fileName, content);
+}
+
+function getGithubBranch() {
+  if (!process.env.GITHUB_REF) {
+    return null;
+  }
+  // refs/heads/feature/xxx => feature/xxx
+  return process.env.GITHUB_REF.substr(process.env.GITHUB_REF.split('/', 2).join().length + 1);
 }
