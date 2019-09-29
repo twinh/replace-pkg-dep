@@ -9,7 +9,7 @@ const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN
 });
 
-export default async function (dir: string = process.cwd()) {
+export default async function (dir: string = process.cwd(), branch: string = '') {
   const fileName = path.join(dir, 'package.json');
   const config = JSON.parse(await util.promisify(fs.readFile)(fileName, 'UTF-8'));
   const replaceKey = 'ciDependencies';
@@ -23,10 +23,12 @@ export default async function (dir: string = process.cwd()) {
     config.resolutions = {};
   }
 
-  const branch = process.env.TRAVIS_PULL_REQUEST_BRANCH
-    || process.env.TRAVIS_BRANCH
-    || getGithubBranch()
-    || await git(dir).getBranch();
+  if (!branch) {
+    branch = process.env.TRAVIS_PULL_REQUEST_BRANCH
+      || process.env.TRAVIS_BRANCH
+      || getGithubBranch()
+      || await git(dir).getBranch();
+  }
   log.info(`current branch is "${branch}"`);
 
   if (branch !== 'master') {

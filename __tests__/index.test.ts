@@ -25,7 +25,7 @@ describe('replace-pkg-dep', () => {
         "test3": "user/test3#branch"
       }
     });
-    await replacePkgDep(repo.dir);
+    await replacePkgDep(repo.dir, 'master');
 
     const config = await getConfig(repo);
 
@@ -56,7 +56,7 @@ describe('replace-pkg-dep', () => {
         "test3": "user/test3#branch"
       }
     });
-    await replacePkgDep(repo.dir);
+    await replacePkgDep(repo.dir, 'master');
 
     const config = await getConfig(repo);
 
@@ -68,14 +68,13 @@ describe('replace-pkg-dep', () => {
 
   test('custom branch', async () => {
     const repo = await createRepo();
-    await repo.run(['checkout', '-b', 'test']);
 
     await writePackage(repo, {
       "ciDependencies": {
         "replace-pkg-dep": "twinh/replace-pkg-dep",
       }
     });
-    await replacePkgDep(repo.dir);
+    await replacePkgDep(repo.dir, 'test');
 
     const config = await getConfig(repo);
 
@@ -93,7 +92,7 @@ describe('replace-pkg-dep', () => {
         "replace-pkg-dep": "twinh/replace-pkg-dep",
       }
     });
-    await replacePkgDep(repo.dir);
+    await replacePkgDep(repo.dir, 'not-found');
 
     const config = await getConfig(repo);
 
