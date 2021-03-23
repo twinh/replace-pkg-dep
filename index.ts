@@ -177,9 +177,7 @@ async function replaceComposer(dir: string = '', branch: string = '') {
       continue;
     }
 
-    if (config['require-dev'] && typeof config['require-dev'][dependency] !== 'undefined') {
-      config['require-dev'][dependency] = replaceDependencies[dependency];
-    }
+    config['require-dev'][dependency] = replaceDependencies[dependency];
   }
 
   log.info('replaced to:', config);

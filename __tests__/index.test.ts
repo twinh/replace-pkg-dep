@@ -174,6 +174,8 @@ describe('replace-pkg-dep', () => {
       "test/test3": "dev-master",
     });
 
+    expect(config['require-dev']).toEqual({});
+
     expect(config.repositories).toEqual([
       {
         "type": "git",
@@ -253,6 +255,13 @@ describe('replace-pkg-dep', () => {
 
     const config = await getComposer(repo);
 
+    expect(config.require).toEqual({});
+
+    expect(config['require-dev']).toEqual({
+      "test/test": "dev-master",
+      "test/test3": "dev-master"
+    });
+
     expect(config.repositories).toEqual([
       {
         "type": "git",
@@ -285,6 +294,9 @@ describe('replace-pkg-dep', () => {
     expect(config.require).toEqual({
       "replace-pkg-dep/replace-pkg-dep": 'dev-test',
     });
+
+    expect(config['require-dev']).toEqual({});
+
     expect(config.repositories).toEqual([
       {
         "type": "git",
@@ -314,6 +326,9 @@ describe('replace-pkg-dep', () => {
     expect(config.require).toEqual({
       "replace-pkg-dep/replace-pkg-dep": 'dev-master',
     });
+
+    expect(config['require-dev']).toEqual({});
+
     expect(config.repositories).toEqual([
       {
         "type": "git",
