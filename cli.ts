@@ -3,5 +3,5 @@
 import replacePkgDep from './index';
 
 (async () => {
-  await replacePkgDep();
+  await replacePkgDep('', '', process.argv[2]);
 })();
