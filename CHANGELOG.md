@@ -1,3 +1,18 @@
+## [0.4.6](https://github.com/twinh/replace-pkg-dep/compare/v0.4.5...v0.4.6) (2021-03-29)
+
+
+### Features
+
+* **Composer:** support Composer inline alias, like "user/repo as 1.0.x-dev" ([661c009](https://github.com/twinh/replace-pkg-dep/commit/661c009633290dde5cc71a6dde0c391941d453d8))
+
+
+
+
+
+### Dependencies
+
+* **@gitsync/test:** upgrade from `0.5.0` to `0.5.1`
+
 ## [0.4.5](https://github.com/twinh/replace-pkg-dep/compare/v0.4.4...v0.4.5) (2021-03-23)
 
 
