@@ -9,6 +9,15 @@ const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
 });
 
+interface ReplaceDependency {
+  // The name of dependency, like "vendor-name/package-name"
+  name: string,
+  // The GitHub repo path, like "user/repo"
+  repo: string,
+  // The composer alias, like "1.1.x-dev"
+  alias?: string,
+}
+
 function getGithubBranch() {
   if (!process.env.GITHUB_REF) {
     return null;
@@ -111,51 +120,23 @@ async function replaceComposer(dir: string = '', branch: string = '') {
   if (typeof config.extra === 'undefined' || typeof config.extra[replaceKey] === 'undefined') {
     return;
   }
-  const replaceDependencies = config.extra[replaceKey];
 
-  if (typeof config.repositories === 'undefined') {
-    config.repositories = [];
-  }
-
-  if (!branch) {
-    branch = await getBranch(dir);
-  }
-  log.info(`current branch is "${branch}"`);
-
-  for (const name in replaceDependencies) {
-    if (!replaceDependencies.hasOwnProperty(name)) {
+  const replaceDependencies: ReplaceDependency[] = [];
+  for (const name in config.extra[replaceKey]) {
+    if (!config.extra[replaceKey].hasOwnProperty(name)) {
       continue;
     }
-    config.repositories.push({
-      type: 'git',
-      url: 'https://github.com/' + replaceDependencies[name] + '.git'
+
+    const [repo, alias] = config.extra[replaceKey][name].split(' as ');
+    replaceDependencies.push({
+      name,
+      repo,
+      alias
     });
   }
 
-  for (const name in replaceDependencies) {
-    if (!replaceDependencies.hasOwnProperty(name)) {
-      continue;
-    }
-
-    if (branch !== 'master') {
-      const [owner, repo] = replaceDependencies[name].split('/');
-      try {
-        const {status} = await octokit.repos.getBranch({
-          branch,
-          owner,
-          repo,
-        });
-        if (status === 200) {
-          replaceDependencies[name] = `dev-${branch}`;
-          log.info(`update dependency "${name}"`);
-        }
-      } catch (e) {
-        log.info(e);
-        replaceDependencies[name] = 'dev-master';
-      }
-    } else {
-      replaceDependencies[name] = 'dev-master';
-    }
+  if (typeof config.repositories === 'undefined') {
+    config.repositories = [];
   }
 
   // Packages may not have been published, replace to avoid install returns not found error
@@ -167,17 +148,42 @@ async function replaceComposer(dir: string = '', branch: string = '') {
     config['require-dev'] = {};
   }
 
-  for (const dependency in replaceDependencies) {
-    if (!replaceDependencies.hasOwnProperty(dependency)) {
+  if (!branch) {
+    branch = await getBranch(dir);
+  }
+  log.info(`current branch is "${branch}"`);
+
+  for (const replaceDependency of replaceDependencies) {
+    // Package may not have been push to packagist
+    config.repositories.push({
+      type: 'git',
+      url: 'https://github.com/' + replaceDependency.repo + '.git'
+    });
+
+    // Branch may not exists
+    let requireBranch = 'dev-master';
+    if (branch !== 'master') {
+      const [owner, repo] = replaceDependency.repo.split('/');
+      try {
+        const {status} = await octokit.repos.getBranch({branch, owner, repo});
+        if (status === 200) {
+          requireBranch = `dev-${branch}`;
+          log.info(`update dependency "${replaceDependency.repo}"`);
+        }
+      } catch (e) {
+        log.info(e);
+      }
+    }
+
+    const dependency = requireBranch + (replaceDependency.alias ? (' as ' + replaceDependency.alias) : '');
+
+    if (config.require && typeof config.require[replaceDependency.name] !== 'undefined') {
+      config.require[replaceDependency.name] = dependency;
       continue;
     }
 
-    if (config.require && typeof config.require[dependency] !== 'undefined') {
-      config.require[dependency] = replaceDependencies[dependency];
-      continue;
-    }
-
-    config['require-dev'][dependency] = replaceDependencies[dependency];
+    // Add the underlying dependencies to require-dev
+    config['require-dev'][replaceDependency.name] = dependency;
   }
 
   log.info('replaced to:', config);

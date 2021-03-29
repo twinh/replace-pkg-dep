@@ -375,5 +375,40 @@ describe('replace-pkg-dep', () => {
       "test/test3": "dev-master",
     });
   });
+
+  test('composer.json: inline alias', async () => {
+    const repo = await createRepo();
+
+    await writeComposer(repo, {
+      "require": {
+        "test/test": "^1.0.0",
+        "test/test3": "^1.2.0",
+      },
+      "extra": {
+        "require-ci": {
+          "test/test": "my-test/test as 1.x-dev",
+          "test/test3": "my-test/test3 as 1.2.x-dev"
+        }
+      }
+    });
+
+    await replacePkgDep(repo.dir);
+
+    const config = await getComposer(repo);
+    expect(config.require).toEqual({
+      "test/test": "dev-master as 1.x-dev",
+      "test/test3": "dev-master as 1.2.x-dev",
+    });
+    expect(config.repositories).toEqual([
+      {
+        "type": "git",
+        "url": "https://github.com/my-test/test.git"
+      },
+      {
+        "type": "git",
+        "url": "https://github.com/my-test/test3.git"
+      }
+    ]);
+  });
 });
 
