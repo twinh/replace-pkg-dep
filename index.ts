@@ -45,7 +45,7 @@ async function replacePackage(dir: string = '', branch = '') {
   if (typeof config[replaceKey] === 'undefined') {
     return;
   }
-  const replaceDependencies = config[replaceKey];
+  const replaceDependencies = {...config[replaceKey]};
 
   if (typeof config.resolutions === 'undefined') {
     config.resolutions = {};

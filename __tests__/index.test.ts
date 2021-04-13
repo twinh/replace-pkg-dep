@@ -150,6 +150,23 @@ describe('replace-pkg-dep', () => {
     });
   });
 
+  test('package.json: ciDependencies should not change', async () => {
+    const repo = await createRepo();
+
+    await writePackage(repo, {
+      "ciDependencies": {
+        "replace-pkg-dep": "twinh/replace-pkg-dep",
+      }
+    });
+    await replacePkgDep(repo.dir, 'test');
+
+    const config = await getPackage(repo);
+
+    expect(config.ciDependencies).toEqual({
+      "replace-pkg-dep": "twinh/replace-pkg-dep",
+    });
+  });
+
   test('composer.json: replace dependencies', async () => {
     const repo = await createRepo();
 
